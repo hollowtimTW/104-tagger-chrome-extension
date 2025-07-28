@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "104 Taggerr",
+  "version": "1.0",
+  "description": "在 104 職缺頁面中自動標示你自訂的技能關鍵字，讓你快速篩選符合條件的工作。",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://www.104.com.tw/jobs/search/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "104 Taggerr 關鍵字設定",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.104.com.tw/jobs/search/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "author": "hollowtimTW",
+  "homepage_url": "https://github.com/hollowtimtw/104-tagger-chrome-extension"
+}

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>104 Taggerr 關鍵字設定</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      width: 400px;
+      min-height: 450px;
+      padding: 15px;
+      margin: 0;
+      background-color: #f8f8f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+    h3 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    .tabs-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      padding: 5px;
+    }
+    .tab-button {
+      flex: 1;
+      padding: 10px 5px;
+      border: none;
+      background-color: transparent;
+      color: #555;
+      font-size: 0.85em;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      text-align: center;
+      position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+    }
+    .tab-button:hover {
+      background-color: #d3d3d3;
+    }
+    .tab-button.active {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+    .tab-button:focus {
+      outline: 2px solid #007bff;
+      outline-offset: 2px;
+    }
+    .content-area {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      flex: 1;
+    }
+    label {
+      font-size: 0.9em;
+      color: #555;
+      margin-bottom: 5px;
+      display: block;
+      font-weight: 500;
+    }
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 0.85em;
+      font-family: inherit;
+    }
+    textarea {
+      height: 100px;
+      resize: vertical;
+      min-height: 60px;
+      max-height: 150px;
+    }
+    input[type="text"]:focus,
+    textarea:focus,
+    input[type="number"]:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    .status-message {
+      font-size: 0.85em;
+      color: #28a745;
+      font-weight: bold;
+      text-align: right;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      min-height: 20px;
+    }
+    .status-message.show {
+      opacity: 1;
+    }
+    .status-message.error {
+      color: #dc3545;
+    }
+    .help-text {
+      font-size: 0.75em;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+    .threshold-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .threshold-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .threshold-container label {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+    .threshold-container input {
+      margin-bottom: 0;
+    }
+    .threshold-help {
+      font-size: 0.75em;
+      color: #666;
+      margin-left: 0;
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+  <h3>104 Taggerr 關鍵字設定</h3>
+
+  <div class="tabs-container">
+    <button class="tab-button" data-setting-id="setting1" type="button" aria-label="設定組 1">設定 1</button>
+    <button class="tab-button" data-setting-id="setting2" type="button" aria-label="設定組 2">設定 2</button>
+    <button class="tab-button" data-setting-id="setting3" type="button" aria-label="設定組 3">設定 3</button>
+  </div>
+
+  <div class="content-area">
+    <label for="settingNameInput">設定名稱：</label>
+    <input type="text" id="settingNameInput" placeholder="例如：前端開發者" maxlength="50" autocomplete="off">
+    
+    <label for="keywordsInput">關鍵字 (以逗號分隔)：</label>
+    <textarea id="keywordsInput" placeholder="例如：JavaScript, React, Node.js, TypeScript" spellcheck="false" autocomplete="off"></textarea>
+    <div class="help-text">提示：輸入技能或工具關鍵字，用逗號分隔。支援中英文混合。</div>
+
+    <div class="threshold-container">
+      <div class="threshold-row">
+        <label for="highlightThresholdInput">高度符合門檻：</label>
+        <input type="number" id="highlightThresholdInput" min="1" max="20" value="3" autocomplete="off">
+      </div>
+      <div class="threshold-help">符合幾個關鍵字時高亮顯示</div>
+    </div>
+
+    <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+    
+    <div class="help-text">
+      💡 使用說明：<br>
+      • 左鍵點擊分頁切換設定組<br>
+      • 右鍵點擊分頁清除該組設定<br>
+      • 設定會自動儲存
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
