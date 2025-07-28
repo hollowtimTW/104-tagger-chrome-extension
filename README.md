@@ -10,6 +10,12 @@
 - 💾 **自動儲存**：設定會自動同步至 Chrome 雲端，跨裝置同步無痛
 - 🎨 **美觀介面**：使用簡潔現代的 UI 設計，操作直覺、易於上手
 
+<div align="center">
+  <img src="images/demo.png" alt="104 Taggerr 功能示意圖" width="700">
+  <br>
+  <em>104 Taggerr 在 104 職缺頁面的運作效果</em>
+</div>
+
 ## 🚀 安裝方式
 
 ### 方法一：從 Chrome 線上應用程式商店安裝（建議）
@@ -40,12 +46,15 @@
 
 ## 📁 專案結構
 
-├── manifest.json # 擴充功能基本設定
-├── popup.html # 設定頁面 HTML
-├── popup.js # 設定頁面邏輯
-├── content.js # 核心內容腳本（注入網頁）
-├── icons/ # 擴充功能圖示
-└── README.md # 說明文件
+```
+├── manifest.json       # 擴充功能基本設定
+├── popup.html          # 設定頁面 HTML
+├── popup.js            # 設定頁面邏輯
+├── content.js          # 核心內容腳本（注入網頁）
+├── icons/              # 擴充功能圖示
+├── images/             # 說明文件用圖片
+└── README.md           # 說明文件
+```
 
 ## 📌 版本歷史
 
