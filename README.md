@@ -20,8 +20,7 @@
 
 ### 方法一：從 Chrome 線上應用程式商店安裝（建議）
 
-1. 前往 [Chrome 線上應用程式商店](https://chrome.google.com/webstore/)
-2. 搜尋 `104 Taggerr` 並點選安裝
+1. 前往 [104 Taggerr (Chrome 線上應用程式商店)](https://chromewebstore.google.com/detail/104-taggerr/ecbkgopdimdgjcekfcpopkbignleedno)
 
 ### 方法二：手動安裝（開發者/進階用戶）
 
