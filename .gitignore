@@ -34,3 +34,4 @@ pids
 # Temporary folders
 tmp/
 temp/
+node_modules/

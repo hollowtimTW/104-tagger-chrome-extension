@@ -88,7 +88,7 @@
       font-family: inherit;
     }
     textarea {
-      height: 100px;
+      height: 80px;
       resize: vertical;
       min-height: 60px;
       max-height: 150px;
@@ -102,6 +102,22 @@
     }
     input[type="number"] {
       width: 100px;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 8px;
+    }
+    .checkbox-container input[type="checkbox"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .checkbox-container label {
+      margin: 0;
+      cursor: pointer;
     }
     .status-message {
       font-size: 0.85em;
@@ -166,9 +182,17 @@
     <label for="settingNameInput">設定名稱：</label>
     <input type="text" id="settingNameInput" placeholder="例如：前端開發者" maxlength="50" autocomplete="off">
     
-    <label for="keywordsInput">關鍵字 (以逗號分隔)：</label>
+    <label for="keywordsInput">標記關鍵字 (以逗號分隔)：</label>
     <textarea id="keywordsInput" placeholder="例如：JavaScript, React, Node.js, TypeScript" spellcheck="false" autocomplete="off"></textarea>
-    <div class="help-text">提示：輸入技能或工具關鍵字，用逗號分隔。支援中英文混合。</div>
+
+    <label for="excludeKeywordsInput">排除關鍵字 (黑名單)：</label>
+    <textarea id="excludeKeywordsInput" placeholder="例如：博弈, 派遣, 駐點" spellcheck="false" autocomplete="off"></textarea>
+    <div class="help-text">提示：輸入技能或不想看到的關鍵字，用逗號分隔。</div>
+
+    <div class="checkbox-container">
+      <input type="checkbox" id="fadeUnmatchedInput">
+      <label for="fadeUnmatchedInput">淡化未命中職缺</label>
+    </div>
 
     <div class="threshold-container">
       <div class="threshold-row">

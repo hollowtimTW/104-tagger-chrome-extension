@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabButtons = document.querySelectorAll('.tab-button');
   const settingNameInput = document.getElementById('settingNameInput');
   const keywordsInput = document.getElementById('keywordsInput');
+  const excludeKeywordsInput = document.getElementById('excludeKeywordsInput');
+  const fadeUnmatchedInput = document.getElementById('fadeUnmatchedInput');
   const highlightThresholdInput = document.getElementById('highlightThresholdInput');
   const statusMessageDiv = document.getElementById('statusMessage');
 
@@ -10,9 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let saveTimer = null;
 
   const defaultSettings = {
-      setting1: { name: '預設組 1', keywords: [], highlightThreshold: 3 },
-      setting2: { name: '預設組 2', keywords: [], highlightThreshold: 3 },
-      setting3: { name: '預設組 3', keywords: [], highlightThreshold: 3 }
+      setting1: { name: '預設組 1', keywords: [], excludeKeywords: [], fadeUnmatched: false, highlightThreshold: 3 },
+      setting2: { name: '預設組 2', keywords: [], excludeKeywords: [], fadeUnmatched: false, highlightThreshold: 3 },
+      setting3: { name: '預設組 3', keywords: [], excludeKeywords: [], fadeUnmatched: false, highlightThreshold: 3 }
   };
   let allStoredSettings = {};
 
@@ -66,12 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const name = settingNameInput.value.trim() || allStoredSettings[currentActiveSettingId].name;
     const keywords = keywordsInput.value.trim().split(',').map(kw => kw.trim()).filter(kw => kw !== '');
+    const excludeKeywords = excludeKeywordsInput.value.trim().split(',').map(kw => kw.trim()).filter(kw => kw !== '');
+    const fadeUnmatched = fadeUnmatchedInput.checked;
     const threshold = parseInt(highlightThresholdInput.value);
     const validThreshold = (!isNaN(threshold) && threshold >= 1) ? threshold : 3;
 
     allStoredSettings[currentActiveSettingId] = {
       name: name,
       keywords: keywords,
+      excludeKeywords: excludeKeywords,
+      fadeUnmatched: fadeUnmatched,
       highlightThreshold: validThreshold
     };
 
@@ -111,6 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function displaySettingInForm(setting) {
     settingNameInput.value = setting.name;
     keywordsInput.value = setting.keywords.join(', ');
+    excludeKeywordsInput.value = (setting.excludeKeywords || []).join(', ');
+    fadeUnmatchedInput.checked = !!setting.fadeUnmatched;
     highlightThresholdInput.value = setting.highlightThreshold;
   }
 
@@ -190,11 +198,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  [settingNameInput, keywordsInput, highlightThresholdInput].forEach(input => {
+  [settingNameInput, keywordsInput, excludeKeywordsInput, highlightThresholdInput].forEach(input => {
     input.addEventListener('input', () => {
       clearTimeout(saveTimer);
       saveTimer = setTimeout(saveCurrentSetting, AUTO_SAVE_DELAY);
     });
+  });
+
+  fadeUnmatchedInput.addEventListener('change', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveCurrentSetting, AUTO_SAVE_DELAY);
   });
 
   loadAllSettings();

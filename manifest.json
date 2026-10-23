@@ -8,7 +8,8 @@
     "activeTab"
   ],
   "host_permissions": [
-    "https://www.104.com.tw/jobs/search/*"
+    "https://www.104.com.tw/jobs/search/*",
+    "https://www.104.com.tw/job/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -20,7 +21,10 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.104.com.tw/jobs/search/*"],
+      "matches": [
+        "https://www.104.com.tw/jobs/search/*",
+        "https://www.104.com.tw/job/*"
+      ],
       "js": ["content.js"],
       "run_at": "document_end"
     }
