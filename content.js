@@ -67,12 +67,12 @@
           }
           @keyframes pulse-glow {
               0% {
-                  box-shadow: 0 3px 8px rgba(255, 107, 53, 0.4), 0 0 0 0 rgba(255, 107, 53, 0.7);
                   transform: scale(1);
+                  opacity: 1;
               }
               100% {
-                  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6), 0 0 0 4px rgba(255, 107, 53, 0);
-                  transform: scale(1.02);
+                  transform: scale(1.05);
+                  opacity: 0.8;
               }
           }
       `;
@@ -83,10 +83,13 @@
       document.querySelectorAll(`.${keywordTagsClass}`).forEach(tagDiv => tagDiv.remove());
       document.querySelectorAll(`.${highlightedItemClass}`).forEach(item => item.classList.remove(highlightedItemClass));
       document.querySelectorAll(`.${highlightInfoClass}`).forEach(info => info.remove());
+      document.querySelectorAll('[data-taggerr-processed="true"]').forEach(item => {
+          item.removeAttribute('data-taggerr-processed');
+      });
   }
 
   function extractKeywordsFromElement(el) {
-    const text = el.innerText || '';
+    const text = el.textContent || '';
     const foundMatches = new Set();
 
     if (!regex || currentKeywords.length === 0) {
@@ -120,17 +123,26 @@
     el.appendChild(tagContainer);
   }
 
-  function processJobItems() {
-    clearAllInjectedElements();
+  function processJobItems(forceAll = false) {
+    // Prevent observer from being triggered by our own DOM changes
+    if (observer) {
+        observer.disconnect();
+    }
+
+    if (forceAll) {
+      clearAllInjectedElements();
+    }
 
     if (currentKeywords.length === 0 || !regex) {
+      startObserving();
       return;
     }
 
-    const items = document.querySelectorAll('.job-list-item, .job-list-container');
+    const items = document.querySelectorAll('.job-list-item:not([data-taggerr-processed="true"]), .job-list-container:not([data-taggerr-processed="true"])');
 
     items.forEach(item => {
       if (item && item.isConnected) {
+        item.setAttribute('data-taggerr-processed', 'true');
         const { keywords: matchedKeywordsNormalized, count: matchedCount } = extractKeywordsFromElement(item);
 
         const keywordsToDisplay = currentKeywords.filter(kw =>
@@ -157,6 +169,8 @@
         }
       }
     });
+
+    startObserving();
   }
 
   function applySetting(setting) {
@@ -164,12 +178,21 @@
       highlightThreshold = setting.highlightThreshold || 1;
 
       if (currentKeywords.length > 0) {
-          const keywordsForRegex = currentKeywords.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+          // Sort by length descending to match longer keywords first
+          const sortedKeywords = [...currentKeywords].sort((a, b) => b.length - a.length);
+          const keywordsForRegex = sortedKeywords.map(k => {
+              const escaped = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              // Add word boundaries for purely English/Number words to prevent partial matches
+              if (/^[a-zA-Z0-9_]+$/.test(k)) {
+                  return `(?<![a-zA-Z0-9_])${escaped}(?![a-zA-Z0-9_])`;
+              }
+              return escaped;
+          }).join('|');
           regex = new RegExp(keywordsForRegex, 'gi');
       } else {
           regex = null;
       }
-      processJobItems();
+      processJobItems(true);
   }
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -269,11 +292,15 @@
     clearTimeout(debounceTimer);
   });
 
-  if (document.body) {
-    observer.observe(document.body, { childList: true, subtree: true });
-  } else {
-    document.addEventListener('DOMContentLoaded', () => {
+  function startObserving() {
+    if (document.body) {
       observer.observe(document.body, { childList: true, subtree: true });
-    });
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
+    }
   }
+
+  startObserving();
 })();
